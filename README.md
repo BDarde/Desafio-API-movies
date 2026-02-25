@@ -68,6 +68,8 @@
     "production_country": { "type": "string", "minLength": 1 }
   }
 }
+
+
 <h3>Fluxo e Decisões Técnicas</h3>
 
 <p><strong>Inicialização:</strong> O caminho (path) do CSV de dados é passado via argumento de linha de comando na inicialização:</p>
@@ -82,7 +84,7 @@ docker build -t desafio-api-movies .
   -v "${PWD}\movies.csv:/app/movies.csv" `
   desafio-api-movies `
   ./app /app/movies.csv
-  
+
 <p>Aplicação disponível em: <code>http://localhost:8080</code></p>
 
 
