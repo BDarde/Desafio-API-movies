@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"net/http"
 	"sort"
@@ -16,6 +17,7 @@ type ResponseError struct {
 }
 
 var mvs []Movie
+var errMinVote = errors.New("filtro de votos minimos nao poder ser maior que máximo")
 
 // busca de N filmes com filtro
 func (app *App) HandlerFindMovies(c *gin.Context) {
@@ -44,9 +46,23 @@ func (app *App) HandlerFindMovies(c *gin.Context) {
 			continue
 		}
 
-		if (filter.Min != 0 && mv.VoteAverage <= filter.Min) && (filter.Max != 0 && mv.VoteAverage >= filter.Max) {
+		// alteração na logica
+		if filter.Min != 0 && mv.VoteAverage < filter.Min {
 			continue
 		}
+
+		if filter.Max != 0 && mv.VoteAverage > filter.Max {
+			continue
+		}
+
+		if filter.Min > filter.Max {
+			c.JSON(http.StatusBadRequest, ResponseError{
+				Message: " Conflito nos filtros de votos",
+				Error:   errMinVote.Error(),
+			})
+			return
+		}
+		//
 
 		mvsResonse = append(mvsResonse, MovieResponse{ID: mv.ID,
 			Title:       mv.Title,

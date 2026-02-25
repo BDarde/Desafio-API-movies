@@ -179,6 +179,10 @@ func extractFilter(c *gin.Context) (Filter, error) {
 		f.Max = max
 	}
 
+	if f.Min != 0 && f.Max == 0 {
+		f.Max = 10
+	}
+
 	return f, nil
 }
 
