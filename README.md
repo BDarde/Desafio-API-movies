@@ -116,5 +116,5 @@ go run . [caminho_do_arquivo]
   <li><strong>Testes de Integração:</strong> Dificuldade em simular o fluxo completo das funções, demandando a criação de <code>main</code> individuais para validar a orquestração do sistema.</li>
   <li><strong>Cálculos de Ponto Flutuante:</strong> O raciocínio lógico para operações matemáticas com decimais gerou conflitos entre atributos, exigindo refatoração na estrutura de utilitários.</li>
  <li><strong>Documentação Swagger:</strong> A Criação da documentação swagger demandou aprendizado pois não tinha utilizada até então</li>
- <li><strong>Docker<strong>A criação do docker para subir o projeto além do volume no container<li>
+ <li><strong>Docker:<strong> A criação do docker para subir o projeto além do volume no container</li>
 </ul>
