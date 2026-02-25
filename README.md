@@ -68,6 +68,7 @@
     "production_country": { "type": "string", "minLength": 1 }
   }
 }
+```
 
 
 <h3>Fluxo e Decisões Técnicas</h3>
