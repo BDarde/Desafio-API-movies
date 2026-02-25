@@ -72,9 +72,17 @@
 
 <p><strong>Inicialização:</strong> O caminho (path) do CSV de dados é passado via argumento de linha de comando na inicialização:</p>
 
-Bash
+Powershell cmd
+##criação do container
 docker build -t desafio-api-movies .
-docker run -p 8080:8080 desafio-api-movies
+
+##inicialização com volume do arquivo
+```text
+  docker run -p 8080:8080 `
+  -v "${PWD}\movies.csv:/app/movies.csv" `
+  desafio-api-movies `
+  ./app /app/movies.csv
+  
 <p>Aplicação disponível em: <code>http://localhost:8080</code></p>
 
 
@@ -105,5 +113,6 @@ go run . [caminho_do_arquivo]
   <li><strong>Gerenciamento de Tipos:</strong> Complexidade no tratamento de conversões de tipos (<code>int</code> para <code>float64</code>), exigindo atenção rigorosa para garantir a precisão dos cálculos financeiros.</li>
   <li><strong>Testes de Integração:</strong> Dificuldade em simular o fluxo completo das funções, demandando a criação de <code>main</code> individuais para validar a orquestração do sistema.</li>
   <li><strong>Cálculos de Ponto Flutuante:</strong> O raciocínio lógico para operações matemáticas com decimais gerou conflitos entre atributos, exigindo refatoração na estrutura de utilitários.</li>
-   <li><strong>Documentação Swagger:</strong> A Criação da documentação swagger demandou aprendizado pois não tinha utilizada até então</li>
+ <li><strong>Documentação Swagger:</strong> A Criação da documentação swagger demandou aprendizado pois não tinha utilizada até então</li>
+ <li><strong>Docker<strong>A criação do docker para subir o projeto além do volume no container<li>
 </ul>
