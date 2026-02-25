@@ -111,45 +111,7 @@ func parseMovie(line []string) (Movie, error) {
 		VoteCount:         voteCount,
 		Genre:             line[12],
 		ProductionCompany: line[13],
-		ProductionCountry: line[14],
 	}, nil
-}
-
-func persistJson(mvs []Movie) error {
-
-	f, err := os.Create(NAME_FILE)
-	if err != nil {
-		return fmt.Errorf("não foi possível criar o arquivo %s", err.Error())
-	}
-
-	b, err := json.Marshal(mvs)
-	if err != nil {
-		return fmt.Errorf("não foi possível serializar os dados")
-	}
-
-	_, err = f.Write(b)
-	if err != nil {
-		return fmt.Errorf("não foi possível escrever os dados json")
-	}
-
-	return nil
-
-}
-
-func update(nameFile string, mvs *[]Movie) error {
-
-	b, err := os.ReadFile(NAME_FILE)
-	if err != nil {
-		return err
-	}
-
-	err = json.Unmarshal(b, &mvs)
-	if err != nil {
-		return err
-	}
-
-	return nil
-
 }
 
 func paginate(items []MovieResponse, page, limit int) []MovieResponse {
@@ -404,4 +366,68 @@ func calcGenre(mvs []Movie) []GenreStats {
 
 	return r
 
+}
+
+func loadMovies(fileName string) ([]Movie, error) {
+
+	var mvs []Movie
+
+	f, err := os.Open(fileName)
+	if err != nil {
+		return nil, err
+	}
+
+	fmt.Print("arquivo aberto com sucesso")
+
+	mvs, err = importData(f)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(mvs) == 0 {
+		return nil, fmt.Errorf("não conseguiu processar os arquivo, o objeto json está vazio")
+	}
+
+	//** fechamento do arquivo economia de memoria
+	defer f.Close()
+	fmt.Printf("objeto json preenchido com sucesso")
+
+	return mvs, nil
+}
+
+func persistJson(mvs []Movie, nameFile string) error {
+
+	f, err := os.Create(nameFile)
+	if err != nil {
+		return err
+	}
+
+	b, err := json.Marshal(mvs)
+	if err != nil {
+		return err
+	}
+
+	n, err := f.Write(b)
+	if err != nil || n == 0 {
+		return err
+	}
+
+	return nil
+
+}
+
+func createJsonFile(mvs []Movie, nameFile string) error {
+	f, err := os.Create(nameFile)
+	if err != nil {
+		return err
+	}
+	defer f.Close()
+
+	b, err := json.Marshal(mvs)
+	if err != nil {
+		return err
+	}
+
+	_, err = f.Write(b)
+	return err
 }

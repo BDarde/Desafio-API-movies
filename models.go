@@ -16,7 +16,6 @@ type Movie struct {
 	VoteCount         int     `json:"vote_count"`
 	Genre             string  `json:"genre"`
 	ProductionCompany string  `json:"production_company"`
-	ProductionCountry string  `json:"production_country"`
 }
 
 // Metricas (indicadores individuais)

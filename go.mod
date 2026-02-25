@@ -1,4 +1,4 @@
-module main.go
+module desafio-api-movies
 
 go 1.25.5
 

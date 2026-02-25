@@ -1,0 +1,235 @@
+openapi: 3.0.0
+info:
+  title: Movie & Analytics API
+  description: API para consulta de catálogo de filmes e processamento de dados analíticos de performance financeira e crítica.
+  version: 1.0.0
+
+paths:
+  /movies:
+    get:
+      summary: Lista todos os filmes
+      description: Retorna uma lista simplificada de filmes cadastrados na base de dados.
+      responses:
+        '200':
+          description: Lista de filmes retornada com sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MovieResponse'
+
+  /movies/{id}:
+    get:
+      summary: Busca detalhes de um filme
+      description: Retorna as informações detalhadas de um filme específico através do seu ID.
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID numérico do filme a ser consultado.
+          schema:
+            type: integer
+            example: 24675
+      responses:
+        '200':
+          description: Detalhes do filme encontrados.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Movie'
+        '404':
+          description: Filme não encontrado.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+
+  /analytics/dashboard:
+    get:
+      summary: Dashboard analítico geral
+      description: Retorna cálculos consolidados sobre toda a base de dados, incluindo ROI, médias de faturamento e o ano de melhor performance.
+      responses:
+        '200':
+          description: Dados analíticos processados com sucesso.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseAnalytics'
+        '500':
+          description: Erro interno no processamento dos cálculos.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ResponseError'
+
+  /analytics/top-studios:
+    get:
+      summary: Ranking de estúdios
+      description: Retorna o ranking dos estúdios com melhor performance baseado em ROI e lucro total.
+      responses:
+        '200':
+          description: Lista de estatísticas por estúdio.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StudioStats'
+
+  /analytics/genre-stats:
+    get:
+      summary: Estatísticas por gênero
+      description: Retorna uma análise detalhada por gênero cinematográfico, incluindo market share e média de votos.
+      responses:
+        '200':
+          description: Estatísticas de gênero retornadas com sucesso.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GenreStats'
+
+components:
+  schemas:
+    ResponseError:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Não foi possível processar a requisição"
+        error:
+          type: string
+          example: "Not Found"
+
+    MovieResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        release_date:
+          type: string
+        genre:
+          type: string
+        vote_average:
+          type: number
+          format: float
+
+    Movie:
+      type: object
+      properties:
+        budget:
+          type: integer
+          format: int64
+        homepage:
+          type: string
+        id:
+          type: integer
+        original_language:
+          type: string
+        overview:
+          type: string
+        popularity:
+          type: number
+          format: double
+        release_date:
+          type: string
+        revenue:
+          type: integer
+          format: int64
+        runtime:
+          type: integer
+        title:
+          type: string
+        vote_average:
+          type: number
+          format: double
+        vote_count:
+          type: integer
+        genre:
+          type: string
+        production_company:
+          type: string
+
+    Summary:
+      type: object
+      properties:
+        total_movies_processed:
+          type: integer
+        global_average_rating:
+          type: number
+          format: double
+        total_revenue:
+          type: integer
+          format: int64
+        total_budget:
+          type: integer
+          format: int64
+        average_revenue:
+          type: integer
+          format: int64
+        average_budget:
+          type: integer
+          format: int64
+        average_profit:
+          type: integer
+          format: int64
+        overall_roi:
+          type: number
+          format: double
+
+    TopPerformingYear:
+      type: object
+      properties:
+        year:
+          type: integer
+        total_revenue:
+          type: integer
+          format: int64
+
+    ResponseAnalytics:
+      type: object
+      properties:
+        Summary:
+          $ref: '#/components/schemas/Summary'
+        TopPerformingYear:
+          $ref: '#/components/schemas/TopPerformingYear'
+
+    StudioStats:
+      type: object
+      properties:
+        ranking:
+          type: integer
+        studio:
+          type: string
+        average_roi:
+          type: number
+          format: double
+        total_profit:
+          type: number
+          format: double
+        movie_count:
+          type: integer
+
+    GenreStats:
+      type: object
+      properties:
+        genre:
+          type: string
+        average_vote:
+          type: number
+          format: double
+        average_roi:
+          type: number
+          format: double
+        movie_count:
+          type: integer
+        total_revenue:
+          type: integer
+          format: int64
+        market_share_percent:
+          type: number
+          format: double

@@ -15,23 +15,10 @@ type ResponseError struct {
 	Error   string `json:"error"`
 }
 
+var mvs []Movie
+
 // busca de N filmes com filtro
-func HandlerFindMovies(c *gin.Context) {
-
-	// busca individual
-	id, prs := c.Params.Get("id")
-	if prs {
-
-		fmt.Printf("id capturado, busca individual %s", id)
-		idInt, _ := strconv.Atoi(id)
-		for _, mv := range mvs {
-			if mv.ID == idInt {
-				c.JSON(http.StatusOK, mv)
-				return
-			}
-		}
-
-	}
+func (app *App) HandlerFindMovies(c *gin.Context) {
 
 	filter, err := extractFilter(c)
 	if err != nil {
@@ -46,7 +33,7 @@ func HandlerFindMovies(c *gin.Context) {
 
 	mvsResonse := []MovieResponse{}
 
-	for _, mv := range mvs {
+	for _, mv := range app.Movies {
 
 		if filter.Genre != "" && mv.Genre != filter.Genre {
 			continue
@@ -75,7 +62,7 @@ func HandlerFindMovies(c *gin.Context) {
 
 }
 
-func HandlerFindMovie(c *gin.Context) {
+func (app *App) HandlerFindMovie(c *gin.Context) {
 
 	var movie MovieWithMetrics
 	var profit int64
@@ -86,7 +73,7 @@ func HandlerFindMovie(c *gin.Context) {
 	if prs {
 
 		idInt, _ := strconv.Atoi(id)
-		for _, mv := range mvs {
+		for _, mv := range app.Movies {
 			if mv.ID == idInt {
 				profit = mv.Revenue - mv.Budget
 				movie = MovieWithMetrics{
@@ -106,9 +93,9 @@ func HandlerFindMovie(c *gin.Context) {
 
 }
 
-func HandlerAnalycts(c *gin.Context) {
+func (app *App) HandlerAnalycts(c *gin.Context) {
 
-	response, err := calc(mvs)
+	response, err := calc(app.Movies)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, ResponseError{
 			Message: "Não foi possível terminar os calculos",
@@ -120,9 +107,9 @@ func HandlerAnalycts(c *gin.Context) {
 
 }
 
-func HandlerTopStudios(c *gin.Context) {
+func (app *App) HandlerTopStudios(c *gin.Context) {
 
-	response := calcStudios(mvs)
+	response := calcStudios(app.Movies)
 
 	sort.Slice(response, func(i, j int) bool {
 		return response[i].TotalProfit > response[j].TotalProfit
@@ -135,9 +122,9 @@ func HandlerTopStudios(c *gin.Context) {
 	c.JSON(http.StatusOK, response)
 }
 
-func HandlerGenreStatus(c *gin.Context) {
+func (app *App) HandlerGenreStatus(c *gin.Context) {
 
-	response := calcGenre(mvs)
+	response := calcGenre(app.Movies)
 
 	c.JSON(http.StatusOK, response)
 }
