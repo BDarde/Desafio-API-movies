@@ -85,9 +85,9 @@ docker build -t desafio-api-movies .
   -v "${PWD}\movies.csv:/app/movies.csv" `
   desafio-api-movies `
   ./app /app/movies.csv
+```
 
 <p>Aplicação disponível em: <code>http://localhost:8080</code></p>
-
 
 go run . [caminho_do_arquivo]
 <p><strong>Estratégia de Cache:</strong> O código verifica a existência do JSON em disco. Caso não exista, ele processa o input CSV original e realiza a persistência, evitando redundância de processamento e prevenindo erros de arquivo inexistente.</p>
@@ -107,7 +107,6 @@ go run . [caminho_do_arquivo]
 
 <h3>Inicialização via Docker</h3>
 <p>Para build e execução do ambiente containerizado:</p>
-
 
 
 <h3>Dificuldades e Aprendizados</h3>
